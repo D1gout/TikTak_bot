@@ -12,5 +12,14 @@ def check_winner(board):
     if board[2] == board[4] == board[6] != 'empty':
         return True, board[2].callback_data  # Возвращаем True и символ победителя
 
+    # Проверяем ничью
+    num = 0
+    for i in range(9):
+        if board[i].callback_data == 'zero' or board[i].callback_data == 'cross':
+            num += 1
+        print(board[i])
+    if num == 9:
+        return True, "Ничья"  # Возвращаем True и Ничью
+
     # Если ни одна из выигрышных комбинаций не найдена
     return False, None

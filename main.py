@@ -84,7 +84,7 @@ class TGMessage:
         desk_buttons.add(*self.row)
 
         db.InsertLastMoveDB(self.user_id, contact_id, 'cross', self.row)
-        await bot.send_message(self.user_id, f"Игра", reply_markup=desk_buttons)
+        self.contact_message_id = await bot.send_message(self.user_id, f"Игра", reply_markup=desk_buttons)
         await bot.send_message(contact_id, f"Игра", reply_markup=desk_buttons)
 
     async def process_callback_game(self, callback_query):
@@ -139,9 +139,13 @@ class TGMessage:
                 message_text = 'Победили Крестики'
                 db.InsertGameStatDB(game[1], True)
                 db.InsertGameStatDB(game[2], False)
-            else:
+            elif winner[1] == 'zero':
                 message_text = 'Победили Нолики'
                 db.InsertGameStatDB(game[1], False)
+                db.InsertGameStatDB(game[2], True)
+            else:
+                message_text = 'Ничья'
+                db.InsertGameStatDB(game[1], True)
                 db.InsertGameStatDB(game[2], True)
 
             db.InsertGameEnd(self.user_id)
