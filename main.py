@@ -90,7 +90,7 @@ class TGMessage:
     async def process_callback_game(self, callback_query):
         self.user_id = callback_query.from_user.id
 
-        if db.GetGameStatusDB(self.user_id)[0]:
+        if db.GetGameStatusDB(self.user_id):
             return
 
         empty_row_id = callback_query.data.split(':')[1]

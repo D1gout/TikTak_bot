@@ -61,21 +61,25 @@ class DBConnect:
         self.conn.commit()
 
     def GetGameStatusDB(self, user_id: int):
-        return self.cur.execute(f"SELECT end_game FROM game "
-                                f"WHERE sender_id = {user_id} or "
-                                f"receiver_id = {user_id} and end_game = FALSE").fetchone()
+        if self.cur.execute(f"SELECT end_game FROM game "
+                            f"WHERE (sender_id = {user_id} or receiver_id = {user_id}) "
+                            f"and end_game = FALSE").fetchone() is None:
+            return True
+
+        else:
+            return False
 
     def InsertLastMoveDB(self, sender_id: int, receiver_id: int, last_move: str, board: tuple):
 
         board_pos = ' '.join(elem.callback_data.split(':')[0] for elem in board)
 
         if self.cur.execute(f"SELECT * FROM game "
-                            f"WHERE sender_id = {sender_id} or "
-                            f"receiver_id = {sender_id} and end_game = FALSE").fetchone():
+                            f"WHERE (sender_id = {sender_id} or receiver_id = {sender_id}) "
+                            f"and end_game = FALSE").fetchone():
 
             self.cur.execute(f"UPDATE game SET last_move_user_id = {sender_id}, "
                              f"last_move = '{last_move}', board = '{board_pos}'"
-                             f"WHERE sender_id = {sender_id} or receiver_id = {sender_id} and end_game = FALSE")
+                             f"WHERE (sender_id = {sender_id} or receiver_id = {sender_id}) and end_game = FALSE")
 
         else:
             self.cur.execute(f"INSERT INTO game (sender_id, receiver_id, last_move_user_id, last_move, board) "
@@ -85,8 +89,8 @@ class DBConnect:
 
     def GetLastMoveDB(self, sender_id: int):
         return self.cur.execute(f"SELECT * FROM game "
-                                f"WHERE sender_id = {sender_id} or "
-                                f"receiver_id = {sender_id} and end_game = FALSE").fetchone()
+                                f"WHERE (sender_id = {sender_id} or receiver_id = {sender_id}) "
+                                f"and end_game = FALSE").fetchone()
 
     def InsertGameStatDB(self, user_id, win: bool):
         if win:
