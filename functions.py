@@ -17,7 +17,6 @@ def check_winner(board):
     for i in range(9):
         if board[i].callback_data == 'zero' or board[i].callback_data == 'cross':
             num += 1
-        print(board[i])
     if num == 9:
         return True, "Ничья"  # Возвращаем True и Ничью
 
