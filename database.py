@@ -57,7 +57,6 @@ class DBConnect:
 
     def DeleteRequestDB(self, sender_id: int, receiver_id: int):
         self.cur.execute(f"DELETE FROM requests WHERE sender_id = {sender_id} AND receiver_id = {receiver_id}")
-        print(1)
 
         self.conn.commit()
 
