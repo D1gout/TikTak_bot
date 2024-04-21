@@ -40,6 +40,7 @@ class TGMessage:
 
         db.InsertRequestDB(self.user_id, contact_name, contact_id)
         await message.answer(f"Запрос {contact_name} отправлен")
+        await bot.send_message(contact_id, f'У вас новый запрос на игру от {message.from_user.first_name}')
 
     async def get_request(self, message):
         self.user_id = message.chat.id
